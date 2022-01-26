@@ -4,6 +4,9 @@ Small script to create and manage simple docker containers.
 ## Introduction
 During development and testing, applications very often need a quick way to set up a temporal database o web server. This script quickly creates these test containers based on configuration templates.
 
+## Why is the project named Keiko?
+Well, Docker's logo has a whale named [Moby Dock](https://www.docker.com/blog/call-me-moby-dock/), so I named the project with the first whale I could remember. [Keiko](https://en.wikipedia.org/wiki/Keiko_(killer_whale)) was a male killer whale that was the main attraction of "Reino Aventura" (a Mexico City amusement park) and portrayed Willy in the 1993 film Free Willy.
+
 ## Installation
 1. Clone or download the content of this repository into any directory.
 1. Add the directory to the `PATH` environment variable, or create a soft link into any directory already in the `PATH`.
