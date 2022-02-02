@@ -9,7 +9,7 @@ $ docker run -p 53:53/udp -p53:53/tcp -d bind
 ~~~
 
 ### Run an authoritative DNS server
-Here is an example configuration for an authoritative DNS server. Please keep in mind that this is an *example*, and it's the minimal configuration for a test run. You should read the [BIND documentation](https://bind9.readthedocs.io/en/latest/#) and the [best practices](https://kb.isc.org/docs/bind-best-practices-recursive) for a production environment.
+Here is an example configuration for an authoritative DNS server. Please keep in mind that this is an ***example***, and it's the minimal configuration for a test run. You should read the [BIND documentation](https://bind9.readthedocs.io/en/latest/#) and the [best practices](https://kb.isc.org/docs/bind-best-practices-recursive) for a production environment.
 
 #### File: named.conf
 ~~~
@@ -40,7 +40,7 @@ $ docker run -v $PWD:/etc/bind -p 53:53/udp -p 53:53/tcp -d bind
 ~~~
 
 ## Extract the RNDC Key
-The image creates a default RNDC key. Use the following command to extract the key from the image. *IMPORTANT*: you should not use this key for production; it's only for testing purposes.
+The image creates a default RNDC key. Use the following command to extract the key from the image. ***IMPORTANT***: you should not use this key for production; it's only for testing purposes.
 ~~~
 $ id=$(docker run --rm -d bind); docker cp $id:/etc/bind/rndc.key .; docker stop $id
 ~~~
