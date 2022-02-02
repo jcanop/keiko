@@ -2,7 +2,7 @@
 # ============================================================
 # A small script to create and manage simple docker containers
 # ============================================================
-VERSION="1.0.0"
+VERSION="1.1.0"
 
 # --- Print Help ---
 print_help() {
@@ -44,6 +44,13 @@ execute_container() {
 	fi
 
 	script_dir="$(dirname "$(readlink -f "$0")")"
+	if [[ $(docker image ls -q $1 | wc -l) -eq 0 ]]; then
+		build_dir="$script_dir/dockerfiles/$1"
+		if [[ -d $build_dir ]]; then
+			docker build -t $1:latest $build_dir
+		fi
+	fi
+
 	file="$script_dir/configs/$1.cfg"
 	name=$2
 
@@ -53,8 +60,8 @@ execute_container() {
 		exit 1
 	fi
 	source $file
-	b_port=$port
 	b_dir=$PWD
+	ports=""
 
 	shift # skip image
 	shift # skip name
@@ -64,21 +71,46 @@ execute_container() {
 			exit 1
 		fi
 		case $1 in
-			-p|--publish) b_port=$2;;
+			-p|--publish)
+				if [[ $2 == *":"* ]]; then
+					ports="$ports -p $2"
+				else
+					if [[ ${#port[@]} == 1 ]]; then
+						ports="$ports -p $2:${port[0]}"
+					else
+						echo ""
+						echo "Exposed ports:"
+						PS3="Binding port for $2: "
+						select p in ${port[@]}; do
+							if [ "$p" != "" ]; then
+								ports="$ports -p $2:$p"
+								break
+							fi
+						done
+						echo ""
+					fi
+				fi;;
 			-v|--volume)  b_dir=$2;;
 		esac
 		shift # skip key
 		shift # skip value
 	done
 
+	if [ "$ports" == "" ]; then
+		for s in "${port[@]}"; do
+			ports="$ports -p ${s//[^0-9]/}:$s"
+		done
+	fi
+	ports="${ports#"${ports%%[![:space:]]*}"}"
+
 	echo "Executing container:"
 	echo "  Image:   $image"
 	echo "  Name:    $name"
 	echo "  Volume:  $b_dir:$dir"
-	echo "  Port:    $b_port:$port"
+	echo "  Port:    $ports"
 	echo "  Args:    $args"
 
-	exec docker run --rm --name $name -v $b_dir:$dir -p 0.0.0.0:$b_port:$port -d $image $args
+	exec docker run --rm --name $name -v $b_dir:$dir $ports -d $image $args
 }
 
 # --- Stops all running containers ---
@@ -101,7 +133,7 @@ execute_clear() {
 	fi
 	ids=$(docker images -q)
 	if [[ ! -z "$ids" ]]; then
-		docker rmi -f
+		docker rmi -f $ids
 	fi
 	docker image prune -f
 	docker system prune -f
