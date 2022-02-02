@@ -12,7 +12,7 @@ print_help() {
 	echo "  ps        List running containers"
 	echo "  run       Creates and runs a container"
 	echo "  stop      Stops all running containers"
-	echo "  clean     Stop and remove all containers, and remove all images."
+	echo "  clear     Stop and remove all containers, and remove all images."
 	echo "  version   Prints the script's version"
 }
 
