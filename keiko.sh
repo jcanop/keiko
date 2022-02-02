@@ -12,6 +12,7 @@ print_help() {
 	echo "  ps        List running containers"
 	echo "  run       Creates and runs a container"
 	echo "  stop      Stops all running containers"
+	echo "  clean     Stop and remove all containers, and remove all images."
 	echo "  version   Prints the script's version"
 }
 
@@ -87,6 +88,25 @@ execute_stop() {
 	done
 }
 
+# --- Stop and remove all containers, and remove all images  ---
+execute_clear() {
+	ids=$(docker ps -aq)
+	if [[ ! -z "$ids" ]]; then
+		docker stop $ids
+		docker rm   $ids
+	fi
+	ids=$(docker volume ls -q)
+	if [[ ! -z "$ids" ]]; then
+		docker volume rm $ids
+	fi
+	ids=$(docker images -q)
+	if [[ ! -z "$ids" ]]; then
+		docker rmi -f
+	fi
+	docker image prune -f
+	docker system prune -f
+}
+
 # --- Prints the script's version ---
 execute_version() {
 	echo "Keiko - $VERSION"
@@ -104,6 +124,7 @@ case $1 in
 	ps)      execute_ps;;
 	run)	 execute_container "${@:2}";;
 	stop)    execute_stop;;
+	clear)   execute_clear;;
 	version) execute_version;;
 	*)       print_help;;
 esac

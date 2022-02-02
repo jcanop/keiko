@@ -34,6 +34,7 @@ $ keiko [command]
 | ps      | List running containers. |
 | run     | Creates and runs a container. |
 | stop    | Stops all running containers. |
+| clean   | Stop and remove all containers, and remove all images. |
 | version | Prints the current version. |
 
 ### Create and Run a Container
