@@ -2,7 +2,6 @@ FROM alpine:latest
 RUN apk --update --no-cache add bind bind-tools
 RUN rm -rf /var/cache/apk/*
 COPY named.conf /etc/bind/
-VOLUME /etc/bind
 EXPOSE 53/udp
 EXPOSE 53/tcp
 EXPOSE 953/tcp
