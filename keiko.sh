@@ -8,11 +8,12 @@ VERSION="1.1.0"
 print_help() {
 	echo "Use: keiko [command]"
 	echo "command:"
+	echo "  build     Build an image"
+	echo "  clear     Stop and remove all containers, and remove all images"
 	echo "  ls        List available images"
 	echo "  ps        List running containers"
 	echo "  run       Creates and runs a container"
 	echo "  stop      Stops all running containers"
-	echo "  clear     Stop and remove all containers, and remove all images."
 	echo "  version   Prints the script's version"
 }
 
@@ -139,6 +140,18 @@ execute_clear() {
 	docker system prune -f
 }
 
+# --- Build a docker image ---
+execute_build() {
+	if [ $# -lt 1 ]; then
+		echo "Use: keiko build [image]"
+		exit 1
+	fi
+
+	script_dir="$(dirname "$(readlink -f "$0")")"
+	build_dir="$script_dir/dockerfiles/$1"
+	docker build -t $1:latest $build_dir
+}
+
 # --- Prints the script's version ---
 execute_version() {
 	echo "Keiko - $VERSION"
@@ -152,11 +165,12 @@ fi
 
 # --- Command matcher ----
 case $1 in
+	build)   execute_build "${@:2}";;
+	clear)   execute_clear;;
 	ls)      execute_ls;;
 	ps)      execute_ps;;
 	run)	 execute_container "${@:2}";;
 	stop)    execute_stop;;
-	clear)   execute_clear;;
 	version) execute_version;;
 	*)       print_help;;
 esac

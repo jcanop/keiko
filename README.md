@@ -30,11 +30,12 @@ $ keiko [command]
 
 | Command | Description |
 | ------- | ----------- |
+| build   | Builds a docker image. |
+| clear   | Stop and remove all containers, and remove all images. |
 | ls      | List available images. |
 | ps      | List running containers. |
 | run     | Creates and runs a container. |
 | stop    | Stops all running containers. |
-| clear   | Stop and remove all containers, and remove all images. |
 | version | Prints the current version. |
 
 ### Create and Run a Container
