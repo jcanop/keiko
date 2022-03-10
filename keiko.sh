@@ -109,9 +109,14 @@ execute_container() {
 	echo "  Name:    $name"
 	echo "  Volume:  $b_dir:$dir"
 	echo "  Port:    $ports"
+	echo "  Env:     $env"
 	echo "  Args:    $args"
 
-	exec docker run --rm --name $name -v $b_dir:$dir $ports -d $image $args
+	if [ "$env" != "" ]; then
+		env="-e $env"
+	fi
+
+	exec docker run --rm --name $name $env -v $b_dir:$dir $ports -d $image $args
 }
 
 # --- Stops all running containers ---
