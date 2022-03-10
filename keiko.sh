@@ -104,6 +104,10 @@ execute_container() {
 	fi
 	ports="${ports#"${ports%%[![:space:]]*}"}"
 
+	if [ "$env" != "" ]; then
+		env="-e $env"
+	fi
+
 	echo "Executing container:"
 	echo "  Image:   $image"
 	echo "  Name:    $name"
@@ -111,10 +115,6 @@ execute_container() {
 	echo "  Port:    $ports"
 	echo "  Env:     $env"
 	echo "  Args:    $args"
-
-	if [ "$env" != "" ]; then
-		env="-e $env"
-	fi
 
 	exec docker run --rm --name $name $env -v $b_dir:$dir $ports -d $image $args
 }
